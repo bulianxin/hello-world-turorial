@@ -18,12 +18,57 @@ export default class Profile extends Component {
   	  	  return avatarFallbackImage;
   	  	},
   	  },
+	  newStatus:"",
+	  status:""
   	};
   }
+	saveNewStatus(statusText){
+		const {userSession}=this.props
+		
+		let status={
+			text:statusText.trim(),
+			created_at:Date.now()
+		}
+		
+		const.options={encrypt:false}
+		userSession.putFile('status.json',JSON.stringify(status),options)
+			.then(()=>{
+				this.setState({
+					newStatus:status.text	
+				})
+			})
+	}
+	
+	fetchData(){
+		const{userSession}=this.props
+		const options={decrypt:false}
+		userSession.getFile('status.json',options)
+			.then((file)=>{
+				var status = JSON.parse(file || '[]')
+				console.log(status)
+				this.setstate({
+					status:status
+					})
+			})
+			.finally(()=>{
+				console.log("read over")
+			})
+		
+		handleNewStatusChange(event){
+			this.setState({newStatus:event.target.value})
+		}		
+		
+		handleNewStatusSubmit(event){
+			this.saveNewStatus(this.state.newStatus)
+			this.setState({
+				newStatus:""
+			})
+		}
 
   render() {
     const { handleSignOut, userSession } = this.props;
     const { person } = this.state;
+		console.log(person)
     return (
       !userSession.isSignInPending() ?
       <div className="panel-welcome" id="section-2">
@@ -43,7 +88,9 @@ export default class Profile extends Component {
       </div> : null
     );
   }
-
+	componentDidMount(){
+		this.fetchData()
+	}
   componentWillMount() {
     const { userSession } = this.props;
     this.setState({
