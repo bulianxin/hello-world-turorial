@@ -85,6 +85,22 @@ export default class Profile extends Component {
             Logout
           </button>
         </p>
+  	    	    <br />
+                    <br />
+                    <textarea className="input-status"
+                        value={this.state.newStatus}
+                        onChange={e => this.handleNewStatusChange(e)}
+                        placeholder=" ‰»Î◊¥Ã¨"
+                    />
+                    <br />
+
+                    <button
+                        className="btn btn-primary btn-lg"
+                        onClick={e => this.handleNewStatusSubmit(e)}
+                    >
+                        Ã·Ωª
+        </button>
+                    <p>  got storage: {this.state.status.text}</p>
       </div> : null
     );
   }
